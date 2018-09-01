@@ -25,5 +25,8 @@ public class State implements Serializable {
     
     @OneToMany(mappedBy = "state")
     private List<City> cities;
-    
+
+    public List<City> getCities() {
+        return cities;
+    }
 }

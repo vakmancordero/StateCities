@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>Microservices</h1>
+
+    <select name="state" id="states"></select>
+    <select name="cities" id="cities"></select>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+        $(function() {
+
+            var $statesSelect = $("#states");
+            var $citiesSelect = $("#cities");
+
+            $.ajax({
+                url: 'http://localhost:8091/states/all',
+                type: 'GET',
+                data: {},
+                success: function(states) {
+
+                    // Llena el comboBox de estados.
+                    states.forEach(function(state, idx) {
+                        $statesSelect.append(new Option(state.name, state.id));
+                    });
+
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+
+            $statesSelect.on('change', function() {
+
+                var stateId = $(this).find(':selected').val()
+
+                $.ajax({
+                    url: 'http://localhost:8091/states/' + stateId,
+                    type: 'GET',
+                    data: {},
+                    success: function(cities) {
+
+                        $citiesSelect.empty();
+
+                        // Llena el comboBox de estados.
+                        cities.forEach(function(city, idx) {
+                            $citiesSelect.append(new Option(city.name, city.id));
+                        });
+
+                    },
+                    error: function (err) {
+                        console.log(err);
+                    }
+                });
+            });
+
+        });
+    </script>
+</body>
+</html>

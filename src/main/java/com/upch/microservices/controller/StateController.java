@@ -1,10 +1,12 @@
 package com.upch.microservices.controller;
 
+import com.upch.microservices.dto.CityDTO;
 import com.upch.microservices.dto.StateDTO;
 import com.upch.microservices.dto.StateWithCitiesDTO;
 import java.util.List;
 import java.util.Optional;
 
+import com.upch.microservices.model.City;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,13 +40,17 @@ public class StateController {
     
     //PathVariables
     @GetMapping("/{stateId}")
-    public StateWithCitiesDTO getState(@PathVariable("stateId") Long stateId) {
+    public List<CityDTO> getState(@PathVariable("stateId") Long stateId) {
         
-        Optional<State> state = stateRepository.findById(stateId);
+        Optional<State> optionalState = stateRepository.findById(stateId);
         
-        if (state.isPresent()) {
-            
-            return convertUtil.convert(state.get(), StateWithCitiesDTO.class);
+        if (optionalState.isPresent()) {
+
+            State state = optionalState.get();
+
+            List<City> cities = state.getCities();
+
+            return convertUtil.convert(cities, CityDTO.class);
             
         } else {
             return null;
